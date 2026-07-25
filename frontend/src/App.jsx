@@ -14,7 +14,7 @@ import Now from './pages/Now';
 import CommandPalette from './components/CommandPalette';
 import HiddenThings from './components/HiddenThings';
 import ProtectedRoute from './components/ProtectedRoute';
-
+ 
 function App() {
   return (
     <div className="min-h-screen bg-gray-50">
@@ -43,9 +43,8 @@ function App() {
         <Route path="/now" element={<Now />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-      <div id="scroll-end-sentinel" style={{ height: 1 }} />
     </div>
   );
 }
-
+ 
 export default App;
