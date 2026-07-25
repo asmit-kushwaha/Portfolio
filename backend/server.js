@@ -18,8 +18,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 const allowedOrigins = [
-  'http://localhost:5173',
-  'https://portfolio-umber-gamma-39.vercel.app',
+  'https://asmitkushwaha.vercel.app',
 ];
 
 app.use(cors({
