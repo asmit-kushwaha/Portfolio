@@ -1,13 +1,16 @@
 const nodemailer = require('nodemailer');
-
+ 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true, // true for port 465
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_APP_PASSWORD,
   },
+  family: 4, // force IPv4 — some hosts (like Render) can't reach Gmail over IPv6
 });
-
+ 
 const sendEmail = async ({ to, subject, html }) => {
   try {
     const info = await transporter.sendMail({
@@ -22,5 +25,5 @@ const sendEmail = async ({ to, subject, html }) => {
     // We don't throw here — email failure shouldn't break the contact form
   }
 };
-
+ 
 module.exports = sendEmail;
