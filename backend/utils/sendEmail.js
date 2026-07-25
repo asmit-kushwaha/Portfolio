@@ -1,36 +1,23 @@
-const nodemailer = require('nodemailer');
-const dns = require('dns');
+const { Resend } = require('resend');
 
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
-  secure: false, // TLS / STARTTLS
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_APP_PASSWORD,
-  },
-  // FORCE IPv4 at the DNS lookup level (bypasses Node v17+ IPv6 default preference)
-  lookup: (hostname, options, callback) => {
-    dns.lookup(hostname, { family: 4 }, callback);
-  },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendEmail = async ({ to, subject, html }) => {
   try {
-    console.log(`[SMTP] Attempting to send email to: ${to}`);
-    const info = await transporter.sendMail({
-      from: `"Asmit Kushwaha Portfolio" <${process.env.EMAIL_USER}>`,
-      to,
-      subject,
-      html,
+    console.log(`[Email API] Sending email to: ${to}...`);
+
+    const data = await resend.emails.send({
+      // Resend allows testing emails using onboard@resend.dev without needing custom domain setup
+      from: 'Portfolio Contact <onboard@resend.dev>',
+      to: [to],
+      subject: subject,
+      html: html,
     });
-    console.log('[SMTP] Success! Message ID:', info.messageId);
-    return info;
+
+    console.log('[Email API] Success! Message ID:', data.id);
+    return data;
   } catch (error) {
-    console.error('[SMTP Error]:', error.message);
+    console.error('[Email API Error]:', error.message);
     return null;
   }
 };
