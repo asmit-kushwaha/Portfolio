@@ -1,18 +1,18 @@
 import { useEffect, useState, useRef } from 'react';
 import MatrixRain from './MatrixRain';
-
+ 
 const KONAMI_SEQUENCE = [
   'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
   'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight',
   'b', 'a',
 ];
-
+ 
 const JOKES = [
   'Why do programmers prefer dark mode? Because light attracts bugs.',
   'There are 10 types of people: those who understand binary, and those who don\'t.',
   '99 little bugs in the code, 99 little bugs... take one down, patch it around, 127 little bugs in the code.',
 ];
-
+ 
 function HiddenThings() {
   const [open, setOpen] = useState(false);
   const [showMatrix, setShowMatrix] = useState(false);
@@ -20,9 +20,8 @@ function HiddenThings() {
     { type: 'output', text: 'type "help" to see what this does' },
   ]);
   const [terminalInput, setTerminalInput] = useState('');
-  const [scrolledToBottom, setScrolledToBottom] = useState(false);
   const konamiProgress = useRef(0);
-
+ 
   // Konami code — works globally, anywhere on the site
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -41,26 +40,7 @@ function HiddenThings() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
-
-  // Scroll-to-bottom achievement — uses a sentinel element at the true end of
-  // each page's content, watched via IntersectionObserver. More reliable than
-  // measuring scrollHeight manually, which varies across browsers/zoom levels.
-  useEffect(() => {
-    const sentinel = document.getElementById('scroll-end-sentinel');
-    if (!sentinel) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setScrolledToBottom(true);
-        }
-      },
-      { threshold: 0 }
-    );
-    observer.observe(sentinel);
-    return () => observer.disconnect();
-  }, []);
-
+ 
   // Console message for anyone who opens DevTools
   useEffect(() => {
     console.log(
@@ -72,11 +52,11 @@ function HiddenThings() {
       'color:#8B949E; font-family: monospace;'
     );
   }, []);
-
+ 
   const runCommand = (raw) => {
     const cmd = raw.trim().toLowerCase();
     if (!cmd) return;
-
+ 
     let response;
     switch (cmd) {
       case 'help':
@@ -108,7 +88,7 @@ function HiddenThings() {
       default:
         response = `command not found: ${cmd} — try "help"`;
     }
-
+ 
     setTerminalLog((log) => [
       ...log,
       { type: 'command', text: cmd },
@@ -116,7 +96,7 @@ function HiddenThings() {
     ]);
     setTerminalInput('');
   };
-
+ 
   return (
     <>
       {/* Trigger button — bottom right, always present */}
@@ -128,7 +108,7 @@ function HiddenThings() {
       >
         ✨
       </button>
-
+ 
       {/* Panel */}
       {open && (
         <div
@@ -145,7 +125,7 @@ function HiddenThings() {
               This site has a few easter eggs. Some you can trigger here, others you'll have to find.
             </p>
           </div>
-
+ 
           {/* Mini terminal */}
           <div className="bg-[#0D1117] border border-white/10 rounded-lg p-3">
             <div className="max-h-32 overflow-y-auto mb-2 flex flex-col gap-1">
@@ -176,23 +156,15 @@ function HiddenThings() {
               />
             </form>
           </div>
-
+ 
           {/* Hint list */}
           <ul className="text-xs text-[#8B949E] font-mono flex flex-col gap-1.5" style={{ fontFamily: "'Inter', sans-serif" }}>
             <li>🎮 Konami code: ↑ ↑ ↓ ↓ ← → ← → B A — works anywhere</li>
             <li>🖱️ Right-click my name in the Navbar</li>
             <li>⌨️ Press Cmd/Ctrl+K anywhere on the site</li>
             <li>🔍 Open DevTools console</li>
-            <li>
-              🏆 Scroll to the bottom of this page —{' '}
-              {scrolledToBottom ? (
-                <span className="text-[#7EE787]">found it ✓</span>
-              ) : (
-                'not yet'
-              )}
-            </li>
           </ul>
-
+ 
           <button
             onClick={() => setShowMatrix(true)}
             className="text-[#5CDBD3] hover:underline text-xs font-mono self-start"
@@ -202,10 +174,10 @@ function HiddenThings() {
           </div>
         </div>
       )}
-
+ 
       {showMatrix && <MatrixRain onClose={() => setShowMatrix(false)} />}
     </>
   );
 }
-
+ 
 export default HiddenThings;
