@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: 'https://portfolio-umber-gamma-39.vercel.app', // your Vite frontend
+  origin: 'https://asmitkushwaha.vercel.app', // your Vite frontend
   credentials: true,
 }));
 
