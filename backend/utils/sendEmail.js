@@ -10,12 +10,13 @@ const transporter = nodemailer.createTransport({
 
 const sendEmail = async ({ to, subject, html }) => {
   try {
-    await transporter.sendMail({
+    const info = await transporter.sendMail({
       from: `"Your Name Portfolio" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       html,
     });
+    console.log('Email sent successfully:', info.messageId, 'to', to);
   } catch (error) {
     console.error('Email failed to send:', error.message);
     // We don't throw here — email failure shouldn't break the contact form
