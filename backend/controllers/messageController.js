@@ -32,7 +32,7 @@ const createMessage = async (req, res) => {
           <p><strong>Your message:</strong></p>
           <p style="color:#555;">${message}</p>
           <br/>
-          <p>Best,<br/>Asmit Kushwaha</p>
+          <p>Best Regards,<br/>Asmit</p>
         `,
       }),
       // Notification to yourself
