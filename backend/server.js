@@ -9,9 +9,7 @@ connectDB();
 
 const app = express();
 
-// Render (and most hosting platforms) run behind a reverse proxy.
-// This tells Express to trust the X-Forwarded-For header from that one proxy layer,
-// which express-rate-limit needs to correctly identify real client IPs.
+// Trust reverse proxy for Render (needed for rate limiter and IP detection)
 app.set('trust proxy', 1);
 
 app.use(express.json());
@@ -26,8 +24,6 @@ app.use(cors({
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      // Log which origin got rejected, without throwing — avoids flooding
-      // logs with full stack traces on every bot/scanner request.
       console.log('CORS rejected origin:', origin);
       callback(null, false);
     }
@@ -39,6 +35,7 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'Backend is running ✅' });
 });
 
+// Routes
 const projectRoutes = require('./routes/projectRoutes');
 app.use('/api/projects', projectRoutes);
 
