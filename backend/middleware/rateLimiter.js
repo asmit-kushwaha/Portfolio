@@ -1,7 +1,6 @@
 const rateLimit = require('express-rate-limit');
 
 // Limits contact form submissions to 5 per 15 minutes, per IP address.
-// Prevents spam/abuse from flooding your inbox or racking up Nodemailer/Cloudinary usage.
 const contactLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5,
@@ -10,9 +9,11 @@ const contactLimiter = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
+  keyGenerator: (req) => req.ip,
+  validate: { trustProxy: false },
 });
 
-// Slightly stricter limit on login attempts — helps against brute-force guessing.
+// Limits login attempts to prevent brute-forcing
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 10,
@@ -21,6 +22,8 @@ const loginLimiter = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
+  keyGenerator: (req) => req.ip,
+  validate: { trustProxy: false },
 });
 
 module.exports = { contactLimiter, loginLimiter };
